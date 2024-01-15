@@ -1,10 +1,5 @@
 package com.elsokhna.Yakhte.response;
 
-import com.elsokhna.Yakhte.model.Yakht;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -23,7 +18,7 @@ public class BookingResponse {
     private int numOfChildren;
     private int totalNumOfGuest;
     private String bookingConfirmationCode;
-    private YakhtResponse yakht;
+    private YachtResponse yakht;
 
     public BookingResponse(Long bookingId, LocalDateTime checkInDate,
                            LocalDateTime checkOutDate,

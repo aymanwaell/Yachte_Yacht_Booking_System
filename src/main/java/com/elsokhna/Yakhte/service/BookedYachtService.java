@@ -1,4 +1,4 @@
 package com.elsokhna.Yakhte.service;
 
-public class BookedYakhtService {
+public class BookedYachtService {
 }

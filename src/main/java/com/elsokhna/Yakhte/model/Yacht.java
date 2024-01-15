@@ -3,7 +3,6 @@ package com.elsokhna.Yakhte.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -11,14 +10,13 @@ import java.math.BigDecimal;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 
-public class Yakht {
+public class Yacht {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,19 +28,19 @@ public class Yakht {
     @Lob
     private Blob photo;
 
-    @OneToMany(mappedBy = "yakht", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<BookedYakht> bookings;
+    @OneToMany(mappedBy = "yacht", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<BookedYacht> bookings;
 
-    public Yakht() {
+    public Yacht() {
         this.bookings = new ArrayList<>();
     }
 
-    public void addBooking(BookedYakht booking){
+    public void addBooking(BookedYacht booking){
         if(bookings==null){
             bookings = new ArrayList<>();
         }
         bookings.add(booking);
-        booking.setYakht(this);
+        booking.setYacht(this);
         isBooked=true;
         String bookingCode = RandomStringUtils.random(10);
         booking.setBookingConfirmationCode(bookingCode);

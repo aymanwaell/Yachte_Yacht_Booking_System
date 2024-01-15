@@ -5,14 +5,12 @@ import lombok.NoArgsConstructor;
 import java.util.Base64;
 
 import java.math.BigDecimal;
-import java.sql.Blob;
-import java.util.Base64;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 
-public class YakhtResponse {
+public class YachtResponse {
     private Long id;
     private String roomType;
     private BigDecimal roomPrice;
@@ -20,13 +18,13 @@ public class YakhtResponse {
     private String photo;
     private List<BookingResponse> bookings;
 
-    public YakhtResponse(Long id, String roomType, BigDecimal roomPrice) {
+    public YachtResponse(Long id, String roomType, BigDecimal roomPrice) {
         this.id = id;
         this.roomType = roomType;
         this.roomPrice = roomPrice;
     }
 
-    public YakhtResponse(Long id, String roomType, BigDecimal roomPrice,
+    public YachtResponse(Long id, String roomType, BigDecimal roomPrice,
                          boolean isBooked, byte[] photoBytes,
                          List<BookingResponse> bookings) {
         this.id = id;

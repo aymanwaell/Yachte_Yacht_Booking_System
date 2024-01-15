@@ -1,7 +1,7 @@
 package com.elsokhna.Yakhte.service;
 
-import com.elsokhna.Yakhte.model.Yakht;
-import com.elsokhna.Yakhte.repository.YakhtRepository;
+import com.elsokhna.Yakhte.model.Yacht;
+import com.elsokhna.Yakhte.repository.YachtRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,19 +14,19 @@ import java.sql.SQLException;
 
 @Service
 @RequiredArgsConstructor
-public class YakhtService implements IYakhtService{
-    private final YakhtRepository yakhtRepository;
+public class YachtService implements IYachtService {
+    private final YachtRepository yachtRepository;
 
     @Override
-    public Yakht addNewYakht(MultipartFile file, String yakhtType, BigDecimal yakhtPrice) throws SQLException, IOException {
-        Yakht yakht = new Yakht();
-        yakht.setRoomType(yakhtType);
-        yakht.setRoomPrice(yakhtPrice);
+    public Yacht addNewYacht(MultipartFile file, String yachtType, BigDecimal yachtPrice) throws SQLException, IOException {
+        Yacht yacht = new Yacht();
+        yacht.setRoomType(yachtType);
+        yacht.setRoomPrice(yachtPrice);
         if(!file.isEmpty()){
             byte[] photoBytes = file.getBytes();
             Blob photoBlob = new SerialBlob(photoBytes);
-            yakht.setPhoto(photoBlob);
+            yacht.setPhoto(photoBlob);
         }
-        return yakhtRepository.save(yakht);
+        return yachtRepository.save(yacht);
     }
 }

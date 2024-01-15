@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class BookedYakht {
+public class BookedYacht {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,7 +47,7 @@ public class BookedYakht {
 
     @JoinColumn(name = "room_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Yakht yakht;
+    private Yacht yacht;
 
 
 
