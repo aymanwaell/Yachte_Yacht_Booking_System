@@ -21,8 +21,8 @@ public class Yacht {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String roomType;
-    private BigDecimal roomPrice;
+    private String yachtType;
+    private BigDecimal yachtPrice;
     private boolean isBooked = false;
 
     @Lob

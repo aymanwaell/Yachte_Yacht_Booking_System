@@ -35,4 +35,6 @@ public class YachtResponse {
         this.bookings = bookings;
     }
 
+    public void add(YachtResponse yachtResponse) {
+    }
 }
