@@ -1,5 +1,6 @@
 package com.elsokhna.Yakhte.service;
 
+import com.elsokhna.Yakhte.exception.InternalServerException;
 import com.elsokhna.Yakhte.exception.ResourceNotFoundException;
 import com.elsokhna.Yakhte.model.Yacht;
 import com.elsokhna.Yakhte.repository.YachtRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -56,4 +58,35 @@ public class YachtService implements IYachtService {
                 }
         return null;
     }
+
+    @Override
+    public void deleteYacht(Long yachtId) {
+        Optional<Yacht> theYacht = yachtRepository.findById(yachtId);
+        if(theYacht.isPresent()){
+            yachtRepository.deleteById(yachtId);
+        }
+    }
+
+    @Override
+    public Yacht updateYacht(Long yachtId, String yachtType, BigDecimal yachtPrice, byte[] photoBytes) throws ResourceNotFoundException, InternalServerException {
+        Yacht yacht = yachtRepository.findById(yachtId).orElseThrow(()-> new ResourceNotFoundException("Yacht not found"));
+        if(yachtType != null){yacht.setYachtType(yachtType);}
+        if(yachtPrice != null){yacht.setYachtPrice(yachtPrice);}
+        if(yachtType != null){yacht.setYachtType(yachtType);}
+        if(photoBytes != null && photoBytes.length>0){
+            try{
+                yacht.setPhoto(new SerialBlob(photoBytes));
+            } catch (SQLException e) {
+                throw new InternalServerException("Error updating yacht");
+            }
+        }
+        return yachtRepository.save(yacht);
+    }
+
+    @Override
+    public Optional<Yacht> getYachtById(Long yachtId) {
+        return Optional.of(yachtRepository.findById(yachtId).get());
+    }
+
+
 }

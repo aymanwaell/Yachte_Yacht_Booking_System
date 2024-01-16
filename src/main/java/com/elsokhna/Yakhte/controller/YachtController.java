@@ -8,15 +8,15 @@ import com.elsokhna.Yakhte.response.BookingResponse;
 import com.elsokhna.Yakhte.response.YachtResponse;
 import com.elsokhna.Yakhte.service.BookingService;
 import com.elsokhna.Yakhte.service.IYachtService;
+import jakarta.persistence.PostUpdate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -62,6 +63,40 @@ public class YachtController {
             }
         }
         return ResponseEntity.ok(yachtResponses);
+    }
+
+    @DeleteMapping("/delete/yacht/{yachtId}")
+    public  ResponseEntity <Void> deleteYacht(@PathVariable("yachtId") Long yachtId){
+        yachtService.deleteYacht(yachtId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/update/{yachtId}")
+    public ResponseEntity<YachtResponse> updateYacht
+            (Long yachtId,@RequestParam(required = false) String yachtType
+                         ,@RequestParam(required = false) BigDecimal yachtPrice
+                         ,@RequestParam(required = false) MultipartFile photo) throws IOException, SQLException, ResourceNotFoundException, PhotoRetrievalException {
+        byte[] photoBytes = photo != null && photo.isEmpty()?
+                photo.getBytes() : yachtService.getYachtPhotoByYachtId(yachtId);
+        Blob photoBlob = photoBytes != null && photoBytes.length>0 ? new SerialBlob(photoBytes): null;
+        Yacht theYacht = yachtService.updateYacht(yachtId,yachtType,yachtPrice,photoBytes);
+        theYacht.setPhoto(photoBlob);
+        YachtResponse yachtResponse = getYachtResponse(theYacht);
+        return ResponseEntity.ok(yachtResponse);
+    }
+
+    @GetMapping("/yacht/{yachtId}")
+    public ResponseEntity<Optional<YachtResponse>> getYachtById(@PathVariable Long yachtId) throws ResourceNotFoundException {
+        Optional<Yacht> theYacht = yachtService.getYachtById(yachtId);
+        return theYacht.map(yacht -> {
+            YachtResponse yachtResponse = null;
+            try {
+                yachtResponse = getYachtResponse(yacht);
+            } catch (SQLException | PhotoRetrievalException e) {
+                throw new RuntimeException(e);
+            }
+            return ResponseEntity.ok(Optional.of(yachtResponse));
+        }).orElseThrow(()->new ResourceNotFoundException("Yacht not found"));
     }
 
     private YachtResponse getYachtResponse(Yacht yacht) throws SQLException, PhotoRetrievalException {
