@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.elsokhna</groupId>
-	<artifactId>Yakhte</artifactId>
+	<artifactId>Yachte</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Yakhte</name>
 	<description>Spring project for Yakhte: Boat and Yacht Rentals</description>
