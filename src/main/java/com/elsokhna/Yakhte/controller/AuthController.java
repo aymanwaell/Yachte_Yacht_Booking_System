@@ -1,31 +1,65 @@
 package com.elsokhna.Yakhte.controller;
 
+
 import com.elsokhna.Yakhte.exception.UserAlreadyExistsException;
 import com.elsokhna.Yakhte.model.User;
+import com.elsokhna.Yakhte.request.LoginRequest;
+import com.elsokhna.Yakhte.response.JwtResponse;
+import com.elsokhna.Yakhte.security.jwt.JwtUtils;
+import com.elsokhna.Yakhte.security.user.YachteUserDetails;
 import com.elsokhna.Yakhte.service.IUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
     private final IUserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
-    @PostMapping("register_user")
-    public ResponseEntity<?> registerUser(User user){
-        try {
+    @PostMapping("/register-user")
+    public ResponseEntity<?> registerUser(@RequestBody User user){
+        try{
             userService.registerUser(user);
-            return ResponseEntity.ok("Registration Successful!");
-        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.ok("Registration successful!");
+
+        }catch (UserAlreadyExistsException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest request){
+        Authentication authentication =
+                authenticationManager
+                        .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtTokenForUser(authentication);
+        YachteUserDetails userDetails = (YachteUserDetails) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority).toList();
+        return ResponseEntity.ok(new JwtResponse(
+                userDetails.getId(),
+                userDetails.getEmail(),
+                jwt,
+                roles));
+    }
 }

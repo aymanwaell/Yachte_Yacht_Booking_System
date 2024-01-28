@@ -1,7 +1,9 @@
 package com.elsokhna.Yakhte.exception;
 
-public class UserAlreadyExistsException extends Throwable {
-    public UserAlreadyExistsException(String s) {
-        super(s);
+
+
+public class UserAlreadyExistsException extends RuntimeException{
+    public UserAlreadyExistsException(String message) {
+        super(message);
     }
 }

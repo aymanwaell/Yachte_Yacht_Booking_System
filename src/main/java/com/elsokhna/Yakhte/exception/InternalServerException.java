@@ -1,7 +1,9 @@
 package com.elsokhna.Yakhte.exception;
 
+
+
 public class InternalServerException extends RuntimeException {
-    public InternalServerException(String errorUpdatingYacht) {
-        super(errorUpdatingYacht);
+    public InternalServerException(String message) {
+        super(message);
     }
 }

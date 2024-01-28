@@ -1,6 +1,5 @@
 package com.elsokhna.Yakhte.security.user;
 
-import com.elsokhna.Yakhte.model.Role;
 import com.elsokhna.Yakhte.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,15 +13,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
+
 @Getter
 @Setter
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class YachteUserDetails implements UserDetails {
-
     private Long id;
-    private String email;
+    private  String email;
     private String password;
     private Collection<GrantedAuthority> authorities;
 
@@ -31,14 +30,15 @@ public class YachteUserDetails implements UserDetails {
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
-
         return new YachteUserDetails(
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities
-        );
+                authorities);
+
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

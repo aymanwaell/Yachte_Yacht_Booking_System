@@ -1,5 +1,6 @@
 package com.elsokhna.Yakhte.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,12 +15,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Role {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users = new HashSet<>();
 
@@ -34,17 +35,17 @@ public class Role {
 
     public void removeUserFromRole(User user){
         user.getRoles().remove(this);
-        this.getUsers().remove(this);
+        this.getUsers().remove(user);
+
     }
 
     public void removeAllUsersFromRole(){
         if (this.getUsers() != null){
             List<User> roleUsers = this.getUsers().stream().toList();
-            roleUsers.forEach(this::removeUserFromRole);
+            roleUsers.forEach(this :: removeUserFromRole);
         }
     }
-
-    public String getName(){
+    public  String getName(){
         return name != null? name : "";
     }
 }

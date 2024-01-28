@@ -1,20 +1,21 @@
 package com.elsokhna.Yakhte.service;
 
+
 import com.elsokhna.Yakhte.exception.UserAlreadyExistsException;
-import com.elsokhna.Yakhte.exception.UsernameNotFoundException;
-import com.elsokhna.Yakhte.exception.UsernameNotFoundException;
 import com.elsokhna.Yakhte.model.Role;
 import com.elsokhna.Yakhte.model.User;
 import com.elsokhna.Yakhte.repository.RoleRepository;
 import com.elsokhna.Yakhte.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
 
     @Override
-    public User registerUser(User user) throws UserAlreadyExistsException {
+    public User registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())){
             throw new UserAlreadyExistsException(user.getEmail() + " already exists");
         }
@@ -53,6 +54,6 @@ public class UserService implements IUserService {
     @Override
     public User getUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
